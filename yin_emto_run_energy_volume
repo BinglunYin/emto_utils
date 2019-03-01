@@ -2,15 +2,62 @@
 
 
 
+srcdir=`pwd`/emto_full_relax
+workdir2=`pwd`/emto_E_V
+workdir=$workdir2/emto_dir
 
 
 
 
+rm -rI $workdir2
+mkdir  $workdir2
+cd     $workdir2
+
+
+mkdir $workdir
+cd    $workdir
+
+
+
+j1=`grep -n 'SWS'  $srcdir/IN.KGRN | cut -d ":" -f1`
+
+
+r0=`grep SWS $srcdir/IN.KGRN  |  awk '{printf "%.16f", $2}'`
+echo 'r0' $r0
+
+#=====================
+
+
+
+for vel in $(seq 0.94 0.02 1.06)
+do
+
+dirn=`printf "%.3f" "$vel"`
+echo ================ $dirn
+mkdir $dirn
+cd $dirn
+
+
+cp $srcdir/IN.*   ./
+cp $srcdir/sub.*  ./
+
+
+el=`echo $vel | awk '{ printf "%.16f",  ($1)^(1/3); }'`
+
+r0new=`echo "scale=16; $r0*$el" | bc | awk '{printf "%.6f", $1}'`
+
+
+sed $j1's/.*/SWS......=  '$r0new' NSWS.=  1 DSWS..=   0.05 ALPCPA= 0.6020/' IN.KGRN > temp
+rm IN.KGRN
+mv temp IN.KGRN
 
 
 
 
+echo 'dir for submit:' `pwd`
+#sbatch sub.*
+cd ..
 
-
+done
 
 
