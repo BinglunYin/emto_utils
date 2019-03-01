@@ -1,8 +1,117 @@
 #!/bin/bash
+# B. Yin, 2019-03-01
+# for EMTO
+
+
+workdir=`pwd`/emto_dir
+
+p_data=`pwd`/emto_post_data
+p_time=`pwd`/emto_post_time
+p_diff=`pwd`/emto_post_diff
 
 
 
 
+echo 'i1   TOT-PBE(Ry)   SWS(bohr) ' >   $p_data
+echo 'i1   FINISH? ' >   $p_time
+echo 'DIFF'          >   $p_diff
 
+
+
+
+ut=0
+uf=0
+
+
+
+#===================
+# loop
+#===================
+
+for i1 in `ls $workdir`
+do
+
+echo -e "\n====================" $i1
+resdir=$workdir/$i1
+
+
+
+#-------------------
+
+
+str1=`grep 'TOT-PBE' $resdir/*.kfcd `
+echo 'str1=' $str1
+
+Etot=`echo $str1 | awk '{printf "%16.8f", $2}'`
+echo 'Etot=' $Etot
+
+SWS=`echo $str1 | awk '{printf "%16.8f", $7}'`
+echo 'SWS=' $SWS
+
+
+echo -e $i1"\t"$Etot"\t"$SWS >> $p_data
+
+
+
+#-------------------
+
+
+
+k1=`grep 'Finished at' $resdir/*.kfcd`
+
+
+echo -e $i1"\t"$k1 >> $p_time
+
+
+ut=$[$ut+1]
+
+if [ "$ut" = "1" ]
+then
+  cp  $resdir/IN.*       ./
+  cp  $resdir/sub.emto   ./
+fi
+
+if [ "$k1" = "" ]
+then
+  uf=$[$uf+1]
+fi
+
+
+
+echo -e "\n==================\n "$i1"\n==================\n " >> $p_diff
+
+declare -a arr=(
+"IN.BMDL"
+"IN.KSTR"
+"IN.SHAPE"
+"IN.KGRN"
+"IN.KFCD"
+"sub.emto"
+)
+
+for j1 in "${arr[@]}"
+do
+   echo -e "\n$j1:\n"       >> $p_diff ; 
+   diff $resdir/$j1  ./$j1  >> $p_diff
+done
+
+
+
+
+done
+#===================
+
+rm IN.* sub.*
+
+echo -e "\n----------------------------------"
+echo "|  total number of jobs: " $ut
+echo "|      un-finished jobs: " $uf
+echo -e "----------------------------------\n"
+
+cat $p_time
+echo -e " "
+
+ls -lsh --color=tty $workdir/*/slurm-*
+echo -e " "
 
 
