@@ -1,0 +1,41 @@
+#!/bin/bash
+# B. Yin, 2019-03-01
+# for EMTO
+
+
+
+mypost=~/yin_github/bash_for_emto/yin_emto_univ_post
+myplot=~/yin_github/python_for_emto/yin_emto_plot_Birch_Murnaghan_EOS.py
+
+
+module purge
+module load intel
+module load python/3.6.5
+module list
+
+echo python version
+python --version
+
+
+#===================
+# loop
+#===================
+
+for i1 in `ls .`
+do
+
+echo -e "\n====================" $i1
+
+cd $i1
+
+$mypost
+python $myplot
+
+cd ..
+
+done
+#===================
+
+head ./*/emto_E_V/emto_Birch_Murnaghan_EOS.txt 
+
+
