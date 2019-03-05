@@ -4,8 +4,8 @@
 
 
 
-mypost=~/yin_github/bash_for_emto/yin_emto_univ_post
-myplot=~/yin_github/python_for_emto/yin_emto_plot_Birch_Murnaghan_EOS.py
+mypost=~yin_github/emto_scripts/emto_bash/yin_emto_univ_post
+myplot=~yin_github/emto_scripts/emto_python/yin_emto_plot_Birch_Murnaghan_EOS.py
 
 
 module purge
