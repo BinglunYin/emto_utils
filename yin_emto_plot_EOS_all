@@ -18,7 +18,7 @@ python --version
 
 
 
-p_diff=`pwd`/REPORT_plot_EOS_all
+p_diff=`pwd`/REPORT_EOS_diff
 echo 'DIFF'          >   $p_diff
 
 dir1=`ls -d -- */ | head -1`
@@ -69,7 +69,7 @@ cd ..
 done
 #===================
 
-head ./*/emto_E_V/emto_Birch_Murnaghan_EOS.txt 
-
+head ./*/emto_E_V/emto_Birch_Murnaghan_EOS.txt > REPORT_EOS_data 
+cat REPORT_EOS_data
 
 
