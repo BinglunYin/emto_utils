@@ -2,7 +2,7 @@
 
 
 import numpy as np
-import scipy.optimize.leastsq as leastsq
+from   scipy.optimize import leastsq
 import scipy.constants as sc
 
 import matplotlib

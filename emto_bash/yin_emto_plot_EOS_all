@@ -4,8 +4,8 @@
 
 
 
-mypost=~yin_github/emto_scripts/emto_bash/yin_emto_univ_post
-myplot=~yin_github/emto_scripts/emto_python/yin_emto_plot_Birch_Murnaghan_EOS.py
+mypost=~/yin_github/emto_scripts/emto_bash/yin_emto_univ_post
+myplot=~/yin_github/emto_scripts/emto_python/yin_emto_plot_Birch_Murnaghan_EOS.py
 
 
 module purge
@@ -18,7 +18,7 @@ python --version
 
 
 
-p_diff=`pwd`/REPORT_EOS_diff
+p_diff=`pwd`/eos_diff
 echo 'DIFF'          >   $p_diff
 
 dir1=`ls -d -- */ | head -1`
@@ -69,7 +69,7 @@ cd ..
 done
 #===================
 
-head ./*/emto_E_V/emto_Birch_Murnaghan_EOS.txt > REPORT_EOS_data 
-cat REPORT_EOS_data
+head ./*/emto_E_V/emto_Birch_Murnaghan_EOS.txt > eos_data 
+cat eos_data
 
 
