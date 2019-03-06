@@ -8,6 +8,7 @@ workdir=`pwd`/emto_dir
 p_data=`pwd`/emto_post_data
 p_time=`pwd`/emto_post_time
 p_diff=`pwd`/emto_post_diff
+p_param=`pwd`/emto_post_param
 
 
 
@@ -15,7 +16,7 @@ p_diff=`pwd`/emto_post_diff
 echo 'i1   TOT-PBE(Ry)   SWS(bohr) ' >   $p_data
 echo 'i1   FINISH? ' >   $p_time
 echo 'DIFF'          >   $p_diff
-
+echo 'Param'         >   $p_param
 
 
 
@@ -94,6 +95,19 @@ do
    echo -e "\n$j1:\n"       >> $p_diff ; 
    diff $resdir/$j1  ./$j1  >> $p_diff
 done
+
+
+
+
+
+
+echo -e "\n==================\n "$i1"\n==================\n " >> $p_param
+
+grep Mag   $resdir/*.kfcd >> $p_param 
+
+echo -e "\n"  >> $p_param
+
+grep CONC  $resdir/*.kfcd >> $p_param
 
 
 
