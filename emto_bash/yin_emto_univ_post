@@ -20,6 +20,21 @@ echo 'Param'         >   $p_param
 
 
 
+dir1=`ls -d -- $workdir/*/  |   head -1`
+refdir=$dir1
+
+
+declare -a arr=(
+"IN.BMDL"
+"IN.KSTR"
+"IN.SHAPE"
+"IN.KGRN"
+"IN.KFCD"
+"sub.emto"
+)
+
+
+
 ut=0
 uf=0
 
@@ -58,19 +73,22 @@ echo -e $i1"\t"$Etot"\t"$SWS >> $p_data
 
 
 
-k1=`grep 'Finished at' $resdir/*.kfcd`
+
+slurm=`ls -t $resdir/slurm* | head -1`
+k1=`grep -A1 "elapsed time" $slurm | tail -1` 
+
+k2=`grep 'Finished at' $resdir/*.kfcd`
+
+echo -e $i1"\t"$k1"\t"$k2 >> $p_time
 
 
-echo -e $i1"\t"$k1 >> $p_time
+
+#-------------------
+
+
 
 
 ut=$[$ut+1]
-
-if [ "$ut" = "1" ]
-then
-  cp  $resdir/IN.*       ./
-  cp  $resdir/sub.emto   ./
-fi
 
 if [ "$k1" = "" ]
 then
@@ -79,21 +97,15 @@ fi
 
 
 
+
 echo -e "\n==================\n "$i1"\n==================\n " >> $p_diff
 
-declare -a arr=(
-"IN.BMDL"
-"IN.KSTR"
-"IN.SHAPE"
-"IN.KGRN"
-"IN.KFCD"
-"sub.emto"
-)
+
 
 for j1 in "${arr[@]}"
 do
    echo -e "\n$j1:\n"       >> $p_diff ; 
-   diff $resdir/$j1  ./$j1  >> $p_diff
+   diff $refdir/$j1   $resdir/$j1   >> $p_diff
 done
 
 
@@ -103,11 +115,26 @@ done
 
 echo -e "\n==================\n "$i1"\n==================\n " >> $p_param
 
-grep Mag   $resdir/*.kfcd >> $p_param 
+grep IEX  $resdir/*.kgrn | head -1  >> $p_param
+echo -e " "  >> $p_param
 
-echo -e "\n"  >> $p_param
+grep AFM  $resdir/*.kgrn | head -1  >> $p_param
+echo -e " "  >> $p_param
+
+grep NOS  $resdir/*.kgrn >> $p_param
+echo -e " "  >> $p_param
+
+
+
+
+grep "Total FCD"   $resdir/*.kfcd >> $p_param
+echo -e " "  >> $p_param
+
+grep Mag   $resdir/*.kfcd >> $p_param 
+echo -e " "  >> $p_param
 
 grep CONC  $resdir/*.kfcd >> $p_param
+
 
 
 
@@ -115,7 +142,6 @@ grep CONC  $resdir/*.kfcd >> $p_param
 done
 #===================
 
-rm IN.* sub.*
 
 echo -e "\n----------------------------------"
 echo "|  total number of jobs: " $ut
