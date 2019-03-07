@@ -24,6 +24,8 @@ def emto_read_post_data():
 
     filename='emto_post_data'
     
+
+    jobn=[]
     Etot=[]
     SWS=[]
 
@@ -31,19 +33,21 @@ def emto_read_post_data():
     next(f)
     for line in f:
         if np.abs( float(line.split( )[1]) ) > 1e-6 : 
+            jobn.append( float(line.split( )[0]) )
             Etot.append( float(line.split( )[1]) )
             SWS.append(  float(line.split( )[2]) )
     
-    print('\nCHECK Etot(Ry) SWS(Bohr):')
+    print('\nCHECK jobn Etot(Ry) SWS(Bohr):')
+    print(jobn)
     print(Etot)
     print(SWS)
     
     f.close()
 
-    return Etot, SWS
+    return jobn, Etot, SWS
 
 
-Etot, SWS=emto_read_post_data()
+jobn, Etot, SWS=emto_read_post_data()
 
 
 
@@ -63,10 +67,14 @@ for i in range(0, len(SWS), 1):
     energies.append( Etot[i]*Ry2eV )
     vols.append( 4/3*math.pi*(SWS[i]*Bohr2Ang)**3 )
 
+
+jobn=np.array(jobn)
 vols=np.array(vols)
 energies=np.array(energies)
 
-print('\nCHECK energies(eV) vols(Ang^3):')
+
+print('\nCHECK jobn energies(eV) vols(Ang^3):')
+print(jobn)
 print(energies)
 print(vols)
 
@@ -120,6 +128,8 @@ SWS0=(V0/(4/3*math.pi))**(1/3) /Bohr2Ang
 
 a0=(V0*4)**(1/3) 
 
+V1V0= np.mean( np.divide( vols/V0, jobn ))
+
 #=====================================
 
 
@@ -134,11 +144,11 @@ f.write("%16.8f %16.8f %16.8f %16.8f \n" \
 %(E0, V0, B0, BP) )
 
 
-f.write("\n%16s %16s %16s \n" \
-%('SWS0 (Bohr)', 'a0_fcc (Ang)', 'R2') )
+f.write("\n%16s %16s %16s %16s \n" \
+%('SWS0 (Bohr)', 'a0_fcc (Ang)', 'R2', 'V1/V0-1') )
 
-f.write("%16.6f %16.8f %16.8f \n" \
-%( SWS0, a0, R2 ) )
+f.write("%16.6f %16.8f %16.8f %16.8f \n" \
+%( SWS0, a0, R2, (V1V0-1) ) )
 
 
 f.write("\n%16s %16s \n" %('E (eV)', 'V (Ang^3)') )

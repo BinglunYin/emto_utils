@@ -1,0 +1,35 @@
+#!/bin/bash
+
+
+myeos=~/yin_github/emto_scripts/emto_bash/yin_emto_run_energy_volume
+
+txtfile=emto_E_V/emto_Birch_Murnaghan_EOS.txt
+
+SWS0=`grep -A1 SWS0 $txtfile | tail -1 | awk '{printf "%.6f", $1}'`
+echo  $SWS0 
+
+
+
+
+if [ "$SWS0" = "" ]
+then
+  echo no SWS0 found, abort
+else
+
+  cd emto_full_relax
+
+  j1=`grep -n 'SWS'  IN.KGRN  | cut -d ":" -f1`
+
+  sed $j1's/.*/SWS......=  '$SWS0' NSWS.=  1 DSWS..=   0.05 ALPCPA= 0.6020/' IN.KGRN > temp
+  rm IN.KGRN
+  mv temp IN.KGRN
+
+  cd ..
+
+
+  $myeos
+
+fi
+
+
+
