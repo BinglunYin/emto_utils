@@ -27,6 +27,7 @@ else
   cd ..
 
 
+  mv emto_E_V  "emto_E_V_$(date '+%Y%m%d')"
   $myeos
 
 fi
