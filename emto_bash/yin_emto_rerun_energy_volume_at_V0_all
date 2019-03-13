@@ -1,0 +1,19 @@
+#!/bin/bash
+# B. Yin, 2019-03-13
+# for EMTO
+
+
+myrerun=~/yin_github/emto_scripts/emto_bash/yin_emto_rerun_energy_volume_at_V0
+
+
+for i1 in `ls -d -- */`
+do
+
+echo -e "\n====================" $i1
+
+cd $i1
+$myrerun
+cd ..
+
+done
+

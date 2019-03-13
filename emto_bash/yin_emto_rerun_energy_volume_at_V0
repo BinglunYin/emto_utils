@@ -9,6 +9,11 @@ SWS0=`grep -A1 SWS0 $txtfile | tail -1 | awk '{printf "%.6f", $1}'`
 echo  $SWS0 
 
 
+abse=`grep -A1 V1/V0 $txtfile | tail -1 | awk '{printf "%.6f", ( ($4)^2 )^(1/2) }'`
+echo  $abse
+
+
+
 
 
 if [ "$SWS0" = "" ]
@@ -16,20 +21,29 @@ then
   echo no SWS0 found, abort
 else
 
-  cd emto_full_relax
 
-  j1=`grep -n 'SWS'  IN.KGRN  | cut -d ":" -f1`
+  if ((  $(echo "$abse < 0.01" | bc -l)  )); then
+    echo abs strain less than 0.01, skip
+  else
+   
 
-  sed $j1's/.*/SWS......=  '$SWS0' NSWS.=  1 DSWS..=   0.05 ALPCPA= 0.6020/' IN.KGRN > temp
-  rm IN.KGRN
-  mv temp IN.KGRN
-
-  cd ..
-
-
-  mv emto_E_V  "emto_E_V_$(date '+%Y%m%d')"
-  $myeos
-
+    cd emto_full_relax
+  
+    j1=`grep -n 'SWS'  IN.KGRN  | cut -d ":" -f1`
+  
+    sed $j1's/.*/SWS......=  '$SWS0' NSWS.=  1 DSWS..=   0.05 ALPCPA= 0.6020/' IN.KGRN > temp
+  
+    mv IN.KGRN  "IN.KGRN_$(date '+%Y%m%d')"
+    mv temp IN.KGRN
+  
+    cd ..
+  
+  
+    mv emto_E_V  "emto_E_V_$(date '+%Y%m%d')"
+    $myeos
+ 
+   fi
+ 
 fi
 
 

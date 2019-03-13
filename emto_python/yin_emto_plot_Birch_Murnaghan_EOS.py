@@ -137,7 +137,7 @@ f = open("emto_Birch_Murnaghan_EOS.txt","w+")
 
 f.write("# EOS fitting: \n" )
 
-f.write("\n%16s %16s %16s %16s \n" \
+f.write("%16s %16s %16s %16s \n" \
 %('E0 (eV)', 'V0 (Ang^3)', 'B0 (GPa)', 'B1') )
 
 f.write("%16.8f %16.8f %16.8f %16.8f \n" \
@@ -149,6 +149,14 @@ f.write("\n%16s %16s %16s %16s \n" \
 
 f.write("%16.6f %16.8f %16.8f %16.8f \n" \
 %( SWS0, a0, R2, (V1V0-1) ) )
+
+
+f.write("\n%16s \n" \
+%('ndata')  )
+
+f.write("%16.0f \n" \
+%( len(SWS) )  )
+
 
 
 f.write("\n%16s %16s \n" %('E (eV)', 'V (Ang^3)') )
