@@ -33,13 +33,13 @@ else
   
     sed $j1's/.*/SWS......=  '$SWS0' NSWS.=  1 DSWS..=   0.05 ALPCPA= 0.6020/' IN.KGRN > temp
   
-    mv IN.KGRN  "IN.KGRN_$(date '+%Y%m%d')"
+    mv IN.KGRN  "IN.KGRN_$(date '+%Y%m%d_%H%M')"
     mv temp IN.KGRN
   
     cd ..
   
   
-    mv emto_E_V  "emto_E_V_$(date '+%Y%m%d')"
+    mv emto_E_V  "emto_E_V_$(date '+%Y%m%d_%H%M')"
     $myeos
  
    fi
