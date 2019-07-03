@@ -1,0 +1,19 @@
+#!/bin/bash
+# B. Yin, 2019-07-03
+# for EMTO
+
+
+mycmd=~/yin_github/emto_scripts/emto_bash/yin_emto_run_energy_volume
+
+
+for i1 in `ls -d -- */`
+do
+
+echo -e "\n====================" $i1
+
+cd $i1
+$mycmd
+cd ..
+
+done
+
