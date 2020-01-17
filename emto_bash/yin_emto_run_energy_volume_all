@@ -12,8 +12,18 @@ do
 echo -e "\n====================" $i1
 
 cd $i1
-$mycmd
+
+if [[ -d "./emto_E_V" ]]
+then
+    echo "=================================="
+    echo " There exists dir emto_E_V. Skip! "
+    echo "=================================="
+else
+    $mycmd
+fi
+
 cd ..
+
 
 done
 
