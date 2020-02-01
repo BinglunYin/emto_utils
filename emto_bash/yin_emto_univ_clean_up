@@ -1,0 +1,11 @@
+#!/bin/bash
+# B. Yin
+
+
+find ./         -name 'IN.KGRN_*'     -exec rm -f  "{}" \;
+
+
+find ./ -type d -name 'emto_E_V_*'    -exec rm -rf "{}" \;
+
+
+
