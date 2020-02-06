@@ -6,24 +6,48 @@
 mycmd=~/yin_github/emto_scripts/emto_bash/yin_emto_run_energy_volume
 
 
+if [ -z "$1" ]; then      # empty $1 is true 
+    echo "==>  skip computed jobs"
+    iskip=1
+
+else
+    case "$1" in
+    
+        -scratch) echo "==> run calculations from scratch"
+                  iskip=0  
+                  ;;
+    
+        *)  echo "==>  Option $1 not recognized. Abort!" 
+            exit
+            ;;   
+    esac
+fi
+
+
+#===============================
+
 for i1 in `ls -d -- */`
 do
 
-echo -e "\n====================" $i1
-
+echo -e "\n==>" $i1
 cd $i1
 
-if [[ -d "./emto_E_V" ]]
-then
-    echo "=================================="
-    echo " There exists dir emto_E_V. Skip! "
-    echo "=================================="
-else
+
+if [ $iskip -eq 1 ]; then
+
+    if [[ -d "./emto_E_V" ]]
+    then
+        echo "==>  There exists dir emto_E_V. Skip! "
+    else
+        $mycmd
+    fi
+
+elif [ $iskip -eq 0 ]; then
     $mycmd
 fi
 
-cd ..
 
+cd ..
 
 done
 
