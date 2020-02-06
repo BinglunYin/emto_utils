@@ -1,0 +1,37 @@
+#!/bin/bash
+# B. Yin
+
+
+
+
+if [ -z "$1" ]; then      # empty $1 is true 
+    echo "==>  Please indicate the operation. Abort!"
+    exit 
+fi
+
+
+
+case "$1" in
+
+    -iex9) echo "==>  changing IEX to 9"
+           
+           for filen in ` find ./ -name 'IN.KGRN' `; do
+               echo -e "\n==>" $filen 
+    
+               j1=`grep -n 'IEX'  $filen  | cut -d ":" -f1`
+               #echo $j1
+              
+               sed $j1's/.*/IEX...=  9 NP..= 251 NES..= 15 NITER=300 IWAT.=  0 NPRNA=  0/' $filen > temp
+               mv temp $filen
+           done
+           ;;
+
+    *)  echo "==>  Option $1 not recognized. Abort!" 
+        exit
+        ;;   
+esac
+
+
+
+
+
