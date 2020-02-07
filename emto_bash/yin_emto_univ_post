@@ -3,6 +3,30 @@
 # for EMTO
 
 
+if [ -z "$1" ]; then      # empty $1 is true 
+    iex=TOT-PBE
+
+else
+    case "$1" in
+        -p07) iex=TOT-P07 
+              ;;
+    
+        -lda) iex=TOT-LDA
+              ;;
+
+           *) iex=TOT-PBE
+              ;;   
+    esac
+fi
+
+echo "==> grep total energy" $iex
+
+
+
+
+
+
+
 workdir=`pwd`/emto_dir
 
 p_data=`pwd`/emto_post_data
@@ -47,7 +71,7 @@ uf=0
 for i1 in `ls $workdir`
 do
 
-echo -e "\n====================" $i1
+echo -e "\n==>" $i1
 resdir=$workdir/$i1
 
 
@@ -55,7 +79,7 @@ resdir=$workdir/$i1
 #-------------------
 
 
-str1=`grep 'TOT-PBE' $resdir/*.kfcd `
+str1=`grep $iex $resdir/*.kfcd `
 echo 'str1=' $str1
 
 Etot=`echo $str1 | awk '{printf "%16.8f", $2}'`
@@ -151,7 +175,7 @@ echo -e "----------------------------------\n"
 cat $p_time
 echo -e " "
 
-ls -lsh --color=tty $workdir/*/slurm-*
+ls -lshG $workdir/*/slurm-*
 echo -e " "
 
 
