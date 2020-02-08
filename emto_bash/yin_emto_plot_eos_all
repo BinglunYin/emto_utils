@@ -1,0 +1,75 @@
+#!/bin/bash
+# B. Yin, 2019-03-01
+# for EMTO
+
+
+
+mypost=~/yin_github/emto_scripts/emto_bash/yin_emto_univ_post 
+myplot=~/yin_github/emto_scripts/emto_python/yin_emto_plot_Birch_Murnaghan_EOS.py
+
+
+module purge
+module load intel
+module load python/3.6.5
+module list
+
+echo python version
+python --version
+
+
+
+p_diff=`pwd`/eos_diff
+echo 'DIFF'          >   $p_diff
+
+dir1=`ls -d -- */ | head -1`
+refdir=`pwd`/$dir1/emto_full_relax
+
+
+declare -a arr=(
+"IN.BMDL"
+"IN.KSTR"
+"IN.SHAPE"
+"IN.KGRN"
+"IN.KFCD"
+"sub.emto"
+)
+
+
+
+#===================
+# loop
+#===================
+
+for i1 in `ls -d -- */`
+do
+
+
+echo -e "\n==>" $i1
+
+cd $i1
+cd emto_E_V
+
+$mypost $1
+python $myplot
+
+cd ..
+
+
+
+echo -e "\n==================\n "$i1"\n==================\n " >> $p_diff
+
+for j1 in "${arr[@]}"
+do
+    echo -e "\n$j1:\n"       >> $p_diff ; 
+    diff $refdir/$j1  ./emto_full_relax/$j1  >> $p_diff
+done
+
+cd ..
+
+done
+#===================
+
+head ./*/emto_E_V/emto_Birch_Murnaghan_EOS.txt > eos_data 
+cat eos_data
+
+
