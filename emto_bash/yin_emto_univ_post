@@ -37,7 +37,7 @@ p_param=`pwd`/emto_post_param
 
 
 
-echo 'i1   TOT-PBE(Ry)   SWS(bohr) ' >   $p_data
+echo 'i1  ' $iex '(Ry)   SWS (bohr) ' >   $p_data
 echo 'i1   FINISH? ' >   $p_time
 echo 'DIFF'          >   $p_diff
 echo 'Param'         >   $p_param
