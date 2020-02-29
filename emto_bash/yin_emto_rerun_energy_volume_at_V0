@@ -13,8 +13,7 @@ echo  $abse
 
 
 
-
-
+#--------------------
 if [ "$SWS0" = "" ]
 then
     echo "==> no SWS0 found, abort"
@@ -39,7 +38,7 @@ else
 
         mv emto_E_V  "emto_E_V_$(date '+%Y%m%d_%H%M')"
         yin_emto_run_energy_volume
-   fi 
+    fi 
 fi
 
 
