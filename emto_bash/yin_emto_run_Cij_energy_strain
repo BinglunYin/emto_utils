@@ -43,7 +43,6 @@ main(){
     #--------------------
     sub_create_dir  $workdir1  sub_apply_orth
     sub_create_dir  $workdir2  sub_apply_mono
-
 }
 
 
@@ -54,7 +53,7 @@ sub_create_dir(){
     local mycmd=$2
     echo $mydir  $mycmd
 
-    rm -r  $mydir   #note I
+    rm -rI $mydir   
     mkdir  $mydir
     cd     $mydir
 
@@ -98,7 +97,7 @@ sub_create_dir(){
     #-----------------------
     yin_emto_univ_cp_lattice
     echo 'dir for submit:' `pwd`
-    # sbatch sub.emto
+    sbatch sub.emto
     cd ..
 
     done
