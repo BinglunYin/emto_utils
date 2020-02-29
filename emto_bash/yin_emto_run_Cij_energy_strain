@@ -1,0 +1,157 @@
+#!/bin/bash
+# B. Yin, 2020-02-28
+
+# for cubic system
+
+main(){
+
+    srcdir=`pwd`/emto_full_relax
+    workdir1=`pwd`/emto_Cij_orth
+    workdir2=`pwd`/emto_Cij_mono
+
+    workdir=emto_dir
+    
+
+    #--------------------
+    j1=`grep -n 'BSX'  $srcdir/IN.BMDL | head -1 | cut -d ":" -f1`
+    j2=$(( $j1+1 ))
+    j3=$(( $j1+2 ))
+    # echo $j1  $j2  $j3
+
+    a1=`sed -n "$j1,$j1 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $2}'`
+    a2=`sed -n "$j1,$j1 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $4}'`
+    a3=`sed -n "$j1,$j1 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $6}'`
+
+    b1=`sed -n "$j2,$j2 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $2}'`
+    b2=`sed -n "$j2,$j2 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $4}'`
+    b3=`sed -n "$j2,$j2 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $6}'`
+
+    c1=`sed -n "$j3,$j3 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $2}'`
+    c2=`sed -n "$j3,$j3 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $4}'`
+    c3=`sed -n "$j3,$j3 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $6}'`
+
+    echo $a1  $a2  $a3
+    echo $b1  $b2  $b3
+    echo $c1  $c2  $c3
+
+
+    #--------------------
+    js=`grep -n 'debug' $srcdir/sub.emto | cut -d ":" -f1`
+    # echo $js
+
+
+    #--------------------
+    sub_create_dir  $workdir1  sub_apply_orth
+    sub_create_dir  $workdir2  sub_apply_mono
+
+}
+
+
+
+
+
+
+sub_create_dir(){
+
+    local mydir=$1
+    local mycmd=$2
+    echo $mydir  $mycmd
+
+    rm -r  $mydir   #note I
+    mkdir  $mydir
+    cd     $mydir
+
+    mkdir $workdir
+    cd    $workdir
+
+
+    #--------------------
+    for lambda in $(seq 0.994 0.002 1.006)
+    do
+
+    dirn=`printf "%.3f" "$lambda"`
+    echo "==>" $dirn
+    mkdir $dirn
+    cd $dirn
+
+    cp $srcdir/IN.*   ./
+    cp $srcdir/sub.*  ./
+
+    x=`echo $lambda | awk '{ printf "%.16f",  ($1-1); }'`
+    echo $x
+
+    $mycmd
+
+    latta=`printf "BSX......= %.7f BSY.....= %.7f BSZ.....= %.7f"   "$a11" "$a22" "$a33"`
+    lattb=`printf "BSX......= %.7f BSY.....= %.7f BSZ.....= %.7f"   "$b11" "$b22" "$b33"`
+    lattc=`printf "BSX......= %.7f BSY.....= %.7f BSZ.....= %.7f"   "$c11" "$c22" "$c33"`
+
+    sed '10s/.*/'"$latta"'/' ./IN.BMDL > ./temp1
+    sed '11s/.*/'"$lattb"'/' ./temp1 > ./temp2
+    sed '12s/.*/'"$lattc"'/' ./temp2 > ./temp3
+    mv temp3 IN.BMDL
+    rm temp*
+
+
+    #-----------------------
+    sed $js's/.*/###SBATCH --partition debug/' sub.emto > temp
+    mv temp sub.emto
+
+
+    #-----------------------
+    yin_emto_univ_cp_lattice
+    echo 'dir for submit:' `pwd`
+    # sbatch sub.emto
+    cd ..
+
+    done
+
+    cd ..
+    cd ..
+    pwd
+}
+
+
+
+sub_apply_orth(){
+
+    a11=`echo "scale=16; $a1 *( 1 + $x )" | bc`
+    a22=`echo "scale=16; $a2 *( 1 - $x )" | bc`
+    a33=`echo "scale=16; $a3 *( 1 + 1 / (1 - $x^2) )" | bc`
+
+    b11=`echo "scale=16; $b1 *( 1 + $x )" | bc`
+    b22=`echo "scale=16; $b2 *( 1 - $x )" | bc`
+    b33=`echo "scale=16; $b3 *( 1 + 1 / (1 - $x^2) )" | bc`
+
+    c11=`echo "scale=16; $c1 *( 1 + $x )" | bc`
+    c22=`echo "scale=16; $c2 *( 1 - $x )" | bc`
+    c33=`echo "scale=16; $c3 *( 1 + 1 / (1 - $x^2) )" | bc`
+
+}
+
+
+
+sub_apply_mono(){
+
+    a11=`echo "scale=16; $a1 + $a2 * ( $x / 2 )"  | bc`
+    a22=`echo "scale=16; $a1 * ( $x / 2 ) + $a2"  | bc`
+    a33=`echo "scale=16; $a3 * ( 4 / (4 - $x^2))" | bc`
+
+    b11=`echo "scale=16; $b1 + $b2 * ( $x / 2 )"  | bc`
+    b22=`echo "scale=16; $b1 * ( $x / 2 ) + $b2"  | bc`
+    b33=`echo "scale=16; $b3 * ( 4 / (4 - $x^2))" | bc`
+ 
+    c11=`echo "scale=16; $c1 + $c2 * ( $x / 2 )"  | bc`
+    c22=`echo "scale=16; $c1 * ( $x / 2 ) + $c2"  | bc`
+    c33=`echo "scale=16; $c3 * ( 4 / (4 - $x^2))" | bc`
+
+}
+
+
+
+
+
+
+main "$@"; exit
+
+

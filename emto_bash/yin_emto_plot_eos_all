@@ -17,7 +17,7 @@ echo python version
 python --version
 
 
-
+#--------------------
 p_diff=`pwd`/eos_diff
 echo 'DIFF'          >   $p_diff
 
@@ -35,7 +35,6 @@ declare -a arr=(
 )
 
 
-
 #===================
 # loop
 #===================
@@ -43,32 +42,28 @@ declare -a arr=(
 for i1 in `ls -d -- */`
 do
 
-
 echo -e "\n==>" $i1
-
 cd $i1
-cd emto_E_V
 
+cd emto_E_V
 $mypost $1
 python $myplot
-
 cd ..
-
 
 
 echo -e "\n==================\n "$i1"\n==================\n " >> $p_diff
 
 for j1 in "${arr[@]}"
 do
-    echo -e "\n$j1:\n"       >> $p_diff ; 
+    echo -e "\n$j1:\n"                       >> $p_diff ; 
     diff $refdir/$j1  ./emto_full_relax/$j1  >> $p_diff
 done
 
 cd ..
-
 done
-#===================
 
+
+#===================
 head ./*/emto_E_V/emto_Birch_Murnaghan_EOS.txt > eos_data 
 cat eos_data
 

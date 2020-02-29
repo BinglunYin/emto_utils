@@ -18,32 +18,29 @@ echo  $abse
 
 if [ "$SWS0" = "" ]
 then
-  echo no SWS0 found, abort
+    echo "==> no SWS0 found, abort"
 else
 
 
-  if ((  $(echo "$abse < 0.01" | bc -l)  )); then
-    echo abs strain less than 0.01, skip
-  else
+    if ((  $(echo "$abse < 0.003" | bc -l)  )); then
+        echo "==> abs volumetric strain less than 0.003, skip"
+    else
    
+        cd emto_full_relax
 
-    cd emto_full_relax
-  
-    j1=`grep -n 'SWS'  IN.KGRN  | cut -d ":" -f1`
-  
-    sed $j1's/.*/SWS......=  '$SWS0' NSWS.=  1 DSWS..=   0.05 ALPCPA= 0.6020/' IN.KGRN > temp
-  
-    mv IN.KGRN  "IN.KGRN_$(date '+%Y%m%d_%H%M')"
-    mv temp IN.KGRN
-  
-    cd ..
-  
-  
-    mv emto_E_V  "emto_E_V_$(date '+%Y%m%d_%H%M')"
-    $myeos
- 
-   fi
- 
+        j1=`grep -n 'SWS'  IN.KGRN  | cut -d ":" -f1`
+
+        sed $j1's/.*/SWS......=  '$SWS0' NSWS.=  1 DSWS..=   0.05 ALPCPA= 0.6020/' IN.KGRN > temp
+
+        mv IN.KGRN  "IN.KGRN_$(date '+%Y%m%d_%H%M')"
+        mv temp IN.KGRN
+
+        cd ..
+
+
+        mv emto_E_V  "emto_E_V_$(date '+%Y%m%d_%H%M')"
+        $myeos 
+   fi 
 fi
 
 
