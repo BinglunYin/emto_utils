@@ -47,7 +47,6 @@ mv temp IN.KGRN
 
 
 sed $j2's/.*/###SBATCH --partition debug/' sub.emto > temp
-rm sub.emto
 mv temp sub.emto
 
 
