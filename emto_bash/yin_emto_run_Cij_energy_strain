@@ -48,9 +48,6 @@ main(){
 
 
 
-
-
-
 sub_create_dir(){
 
     local mydir=$1
@@ -114,25 +111,22 @@ sub_create_dir(){
 
 
 sub_apply_orth(){
-
     a11=`echo "scale=16; $a1 *( 1 + $x )" | bc`
     a22=`echo "scale=16; $a2 *( 1 - $x )" | bc`
-    a33=`echo "scale=16; $a3 *( 1 + 1 / (1 - $x^2) )" | bc`
+    a33=`echo "scale=16; $a3 *( 1 / (1 - $x^2) )" | bc`
 
     b11=`echo "scale=16; $b1 *( 1 + $x )" | bc`
     b22=`echo "scale=16; $b2 *( 1 - $x )" | bc`
-    b33=`echo "scale=16; $b3 *( 1 + 1 / (1 - $x^2) )" | bc`
+    b33=`echo "scale=16; $b3 *( 1 / (1 - $x^2) )" | bc`
 
     c11=`echo "scale=16; $c1 *( 1 + $x )" | bc`
     c22=`echo "scale=16; $c2 *( 1 - $x )" | bc`
-    c33=`echo "scale=16; $c3 *( 1 + 1 / (1 - $x^2) )" | bc`
-
+    c33=`echo "scale=16; $c3 *( 1 / (1 - $x^2) )" | bc`
 }
 
 
 
 sub_apply_mono(){
-
     a11=`echo "scale=16; $a1 + $a2 * ( $x / 2 )"  | bc`
     a22=`echo "scale=16; $a1 * ( $x / 2 ) + $a2"  | bc`
     a33=`echo "scale=16; $a3 * ( 4 / (4 - $x^2))" | bc`
@@ -144,11 +138,7 @@ sub_apply_mono(){
     c11=`echo "scale=16; $c1 + $c2 * ( $x / 2 )"  | bc`
     c22=`echo "scale=16; $c1 * ( $x / 2 ) + $c2"  | bc`
     c33=`echo "scale=16; $c3 * ( 4 / (4 - $x^2))" | bc`
-
 }
-
-
-
 
 
 
