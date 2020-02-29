@@ -3,9 +3,7 @@
 # for EMTO
 
 
-
-mypost=~/yin_github/emto_scripts/emto_bash/yin_emto_univ_post 
-myplot=~/yin_github/emto_scripts/emto_python/yin_emto_plot_Birch_Murnaghan_EOS.py
+myplot=~/yin_github/emto_utils/emto_python/yin_emto_plot_Birch_Murnaghan_EOS.py
 
 
 module purge
@@ -46,7 +44,7 @@ echo -e "\n==>" $i1
 cd $i1
 
 cd emto_E_V
-$mypost $1
+yin_emto_univ_post  $1
 python $myplot
 cd ..
 

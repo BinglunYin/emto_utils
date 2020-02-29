@@ -3,7 +3,6 @@
 # for EMTO
 
 
-mycmd=~/yin_github/emto_scripts/emto_bash/yin_emto_run_energy_volume
 
 
 if [ -z "$1" ]; then      # empty $1 is true 
@@ -39,11 +38,11 @@ if [ $iskip -eq 1 ]; then
     then
         echo "==>  There exists dir emto_E_V. Skip! "
     else
-        $mycmd
+        yin_emto_run_energy_volume
     fi
 
 elif [ $iskip -eq 0 ]; then
-    $mycmd
+    yin_emto_run_energy_volume
 fi
 
 

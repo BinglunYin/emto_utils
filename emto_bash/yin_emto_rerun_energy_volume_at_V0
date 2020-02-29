@@ -1,7 +1,6 @@
 #!/bin/bash
 
 
-myeos=~/yin_github/emto_scripts/emto_bash/yin_emto_run_energy_volume
 
 txtfile=emto_E_V/emto_Birch_Murnaghan_EOS.txt
 
@@ -39,7 +38,7 @@ else
 
 
         mv emto_E_V  "emto_E_V_$(date '+%Y%m%d_%H%M')"
-        $myeos 
+        yin_emto_run_energy_volume
    fi 
 fi
 
