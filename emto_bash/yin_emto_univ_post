@@ -21,7 +21,19 @@ sub_post(){
 
     if [ -z "$1" ]; then      # empty $1 is true 
         iex=TOT-PBE
-    
+
+        dir1=`ls -d  ./emto_dir/*/ | head -1`
+        IEX=`grep IEX  $dir1/IN.KGRN | awk '{printf "%d", $2}' `
+        echo $IEX
+        
+        if [ "$IEX" = "4" ]; then
+            iex=TOT-LDA
+        elif [ "$IEX" = "7" ]; then
+            iex=TOT-PBE
+        elif [ "$IEX" = "9" ]; then
+            iex=TOT-P07 
+        fi
+
     else
         case "$1" in
             -p07) iex=TOT-P07 

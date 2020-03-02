@@ -2,20 +2,21 @@
 # B. Yin, 2020-02-29
 
 
-j1=`grep -n 'BSX'  ./IN.BMDL | head -1 | cut -d ":" -f1`
+jb=`grep -n 'A........='  ./IN.BMDL | head -1 | cut -d ":" -f1`
+jk=`grep -n 'A........='  ./IN.KSTR | head -1 | cut -d ":" -f1`
 
-k1=`grep -n 'BSX'  ./IN.KSTR | head -1 | cut -d ":" -f1`
+echo "==> copy lattice from IN.BMDL to IN.KSTR, lines:" $jb $jk
 
-echo "==> copy lattice from IN.BMDL to IN.KSTR, lines:" $j1 $k1
-
-for i in $(seq 0 1 2)
+for i in $(seq 0 1)
 do
-    j2=$(( $j1 + $i ))
-    k2=$(( $k1 + $i ))
+    jb2=$(( $jb + $i ))
+    jk2=$(( $jk + $i ))
 
     unset myline
-    myline=`sed -n "$j2,$j2 p" ./IN.BMDL `
-    sed $k2's/.*/'"$myline"'/' ./IN.KSTR > ./temp
+    myline=`sed -n "$jb2,$jb2 p" ./IN.BMDL`
+    sed $jk2's/.*/'"$myline"'/' ./IN.KSTR > ./temp
     mv temp IN.KSTR
 done
+
+
 

@@ -38,11 +38,11 @@ if [ $iskip -eq 1 ]; then
     then
         echo "==>  There exists dir emto_E_V. Skip! "
     else
-        yin_emto_run_energy_volume
+        yin_emto_run_eos_energy_volume
     fi
 
 elif [ $iskip -eq 0 ]; then
-    yin_emto_run_energy_volume
+    yin_emto_run_eos_energy_volume
 fi
 
 

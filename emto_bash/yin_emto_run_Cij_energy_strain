@@ -13,31 +13,24 @@ main(){
     
 
     #--------------------
-    j1=`grep -n 'BSX'  $srcdir/IN.BMDL | head -1 | cut -d ":" -f1`
-    j2=$(( $j1+1 ))
-    j3=$(( $j1+2 ))
-    # echo $j1  $j2  $j3
+    jb=`grep -n 'LAT'   $srcdir/IN.BMDL | head -1 | cut -d ":" -f1`
+    jk=`grep -n 'LAT'   $srcdir/IN.KSTR | head -1 | cut -d ":" -f1`
+    
+    jdm=`grep -n 'DMAX' $srcdir/IN.KSTR | head -1 | cut -d ":" -f1`
+    jbz=`grep -n 'IBZ'  $srcdir/IN.KGRN | head -1 | cut -d ":" -f1`
 
-    a1=`sed -n "$j1,$j1 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $2}'`
-    a2=`sed -n "$j1,$j1 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $4}'`
-    a3=`sed -n "$j1,$j1 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $6}'`
 
-    b1=`sed -n "$j2,$j2 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $2}'`
-    b2=`sed -n "$j2,$j2 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $4}'`
-    b3=`sed -n "$j2,$j2 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $6}'`
-
-    c1=`sed -n "$j3,$j3 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $2}'`
-    c2=`sed -n "$j3,$j3 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $4}'`
-    c3=`sed -n "$j3,$j3 p" $srcdir/IN.BMDL | awk '{printf "%.8f", $6}'`
-
-    echo $a1  $a2  $a3
-    echo $b1  $b2  $b3
-    echo $c1  $c2  $c3
+    echo $jb  $jk  $jdm  $jbz
 
 
     #--------------------
-    js=`grep -n 'debug' $srcdir/sub.emto | cut -d ":" -f1`
-    # echo $js
+    j1=`grep -n 'A........='  $srcdir/IN.BMDL | head -1 | cut -d ":" -f1`
+    echo $j1  
+
+
+    #--------------------
+    js=`grep -n 'debug' $srcdir/sub.emto | head -1 | cut -d ":" -f1`
+    echo $js
 
 
     #--------------------
@@ -62,43 +55,56 @@ sub_create_dir(){
 
 
     #--------------------
-    for lambda in $(seq 0.994 0.002 1.006)
-    do
+    for x in $(seq 0.000 0.002 0.010);  do
 
-    dirn=`printf "%.3f" "$lambda"`
-    echo "==>" $dirn
-    mkdir $dirn
-    cd $dirn
+        dirn=`printf "%.3f" "$x"`
+        echo "==>" $dirn
+        mkdir $dirn
+        cd $dirn
+    
+        cp $srcdir/IN.*   ./
+        cp $srcdir/sub.*  ./
+    
+        $mycmd
+    
+        abc=`printf "A........=%10.8f B.......=%10.8f C.......=%10.8f"   "1.0" "$bb" "$cc"`
+        echo $abc
+        sed $j1's/.*/'"$abc"'/' ./IN.BMDL > ./temp
+        mv temp IN.BMDL
+    
 
-    cp $srcdir/IN.*   ./
-    cp $srcdir/sub.*  ./
+        unset str1
+        str1=`printf "NQ3...=  1 LAT...=%2d IPRIM.= 1 NQR2..= 0"  "$LAT"`
+        sed $jb's/.*/'"$str1"'/' IN.BMDL > temp
+        mv temp IN.BMDL
 
-    x=`echo $lambda | awk '{ printf "%.16f",  ($1-1); }'`
-    echo $x
+        unset str1
+        str1=`printf "NQ3...=  1 LAT...=%2d IPRIM.= 1 NGHBP.=13 NQR2..= 0"  "$LAT"`
+        sed $jk's/.*/'"$str1"'/' IN.KSTR > temp
+        mv temp IN.KSTR
 
-    $mycmd
+        unset str1
+        str1=`printf "(K*W)^2..=  0.000000 DMAX....=    %6.4f RWATS...=      0.10"    "$DMAX"`
+        sed $jdm's/.*/'"$str1"'/' IN.KSTR > temp
+        mv temp IN.KSTR
+        
+        unset str1
+        str1=`printf "KMSH...= G IBZ..= %2d NKX..= 29 NKY..= 29 NKZ..= %2d FBZ..=  N"  "$LAT"  "$NKZ" `
+        sed $jbz's/.*/'"$str1"'/' IN.KGRN > temp
+        mv temp IN.KGRN
 
-    latta=`printf "BSX......= %.7f BSY.....= %.7f BSZ.....= %.7f"   "$a11" "$a22" "$a33"`
-    lattb=`printf "BSX......= %.7f BSY.....= %.7f BSZ.....= %.7f"   "$b11" "$b22" "$b33"`
-    lattc=`printf "BSX......= %.7f BSY.....= %.7f BSZ.....= %.7f"   "$c11" "$c22" "$c33"`
-
-    sed $j1's/.*/'"$latta"'/' ./IN.BMDL > ./temp1
-    sed $j2's/.*/'"$lattb"'/' ./temp1 > ./temp2
-    sed $j3's/.*/'"$lattc"'/' ./temp2 > ./temp3
-    mv temp3 IN.BMDL
-    rm temp*
-
-
-    #-----------------------
-    sed $js's/.*/###SBATCH --partition debug/' sub.emto > temp
-    mv temp sub.emto
-
-
-    #-----------------------
-    yin_emto_univ_cp_lattice
-    echo 'dir for submit:' `pwd`
-    sbatch sub.emto
-    cd ..
+    
+        #-----------------------
+        sed $js's/.*/###SBATCH --partition debug/' sub.emto > temp
+        mv temp sub.emto
+    
+        yin_emto_univ_cp_lattice
+   
+ 
+        #-----------------------
+        echo 'submit dir:' `pwd`
+        sbatch sub.emto
+        cd ..
 
     done
 
@@ -110,37 +116,28 @@ sub_create_dir(){
 
 
 sub_apply_orth(){
-    a11=`echo "scale=16; $a1 *( 1 + $x )" | bc`
-    a22=`echo "scale=16; $a2 *( 1 - $x )" | bc`
-    a33=`echo "scale=16; $a3 *( 1 / (1 - $x^2) )" | bc`
+    bb=`echo "scale=16; (1 - $x) /(1 + $x)" | bc`
+    cc=`echo "scale=16; 1 /(1 - $x^2) /(1 + $x)" | bc`
 
-    b11=`echo "scale=16; $b1 *( 1 + $x )" | bc`
-    b22=`echo "scale=16; $b2 *( 1 - $x )" | bc`
-    b33=`echo "scale=16; $b3 *( 1 / (1 - $x^2) )" | bc`
-
-    c11=`echo "scale=16; $c1 *( 1 + $x )" | bc`
-    c22=`echo "scale=16; $c2 *( 1 - $x )" | bc`
-    c33=`echo "scale=16; $c3 *( 1 / (1 - $x^2) )" | bc`
+    LAT=11  #fco 
+    DMAX=1.7
+    NKZ=29
 }
 
 
 
 sub_apply_mono(){
-    a11=`echo "scale=16; $a1 + $a2 * ( $x / 2 )"  | bc`
-    a22=`echo "scale=16; $a1 * ( $x / 2 ) + $a2"  | bc`
-    a33=`echo "scale=16; $a3 * ( 4 / (4 - $x^2))" | bc`
+    bb=`echo "scale=16; (1 - $x) /(1 + $x)" | bc`
+    cc=`echo "scale=16; sqrt(2) /(1 - $x^2) /(1 + $x)" | bc`
 
-    b11=`echo "scale=16; $b1 + $b2 * ( $x / 2 )"  | bc`
-    b22=`echo "scale=16; $b1 * ( $x / 2 ) + $b2"  | bc`
-    b33=`echo "scale=16; $b3 * ( 4 / (4 - $x^2))" | bc`
- 
-    c11=`echo "scale=16; $c1 + $c2 * ( $x / 2 )"  | bc`
-    c22=`echo "scale=16; $c1 * ( $x / 2 ) + $c2"  | bc`
-    c33=`echo "scale=16; $c3 * ( 4 / (4 - $x^2))" | bc`
+    LAT=10  #bco
+    DMAX=2.4
+    NKZ=41
 }
 
 
 
 main "$@"; exit
+
 
 
