@@ -10,7 +10,7 @@ do
 echo -e "\n==> " $i1
 
 cd $i1
-yin_emto_rerun_energy_volume_at_V0
+yin_emto_rerun_eos_at_V0
 cd ..
 
 done
