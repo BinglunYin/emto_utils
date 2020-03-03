@@ -1,0 +1,34 @@
+#!/bin/bash
+
+myplot=~/yin_github/emto_utils/emto_python/yin_emto_plot_Cij_cubic.py
+
+module purge
+module load intel
+module load python/3.6.5
+module list
+
+echo "==> python version:"
+python --version
+
+
+#--------------------
+
+d0=`pwd`
+
+for dirn in ` find ./ -name 'emto_Cij_orth' `; do
+    cd $dirn
+    pwd
+    
+    cd ../emto_Cij_mono
+    yin_emto_univ_post  
+    
+    cd ../emto_Cij_orth
+    yin_emto_univ_post 
+    python $myplot
+done
+
+cd $d0
+
+
+
+
