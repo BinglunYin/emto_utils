@@ -55,7 +55,7 @@ sub_create_dir(){
 
 
     #--------------------
-    for x in $(seq 0.000 0.002 0.010);  do
+    for x in $(seq 0.000 0.010 0.050);  do
 
         dirn=`printf "%.3f" "$x"`
         echo "==>" $dirn

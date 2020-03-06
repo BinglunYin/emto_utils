@@ -2,14 +2,15 @@
 
 
 import numpy as np
+import yin_emto_func as ef
 
 
 def main():
-    jobn1, Etot1, SWS1 = emto_read_post_data()
+    jobn1, Etot1, SWS1 = ef.emto_read_post_data()
     x1, y1 = post_data( jobn1, Etot1, SWS1 )
     fitres1 = myfitting(x1, y1)
 
-    jobn2, Etot2, SWS2 = emto_read_post_data('../emto_Cij_mono/emto_post_data')
+    jobn2, Etot2, SWS2 = ef.emto_read_post_data('../emto_Cij_mono/emto_post_data')
     x2, y2 = post_data( jobn2, Etot2, SWS2 )
     fitres2 = myfitting(x2, y2)
     
@@ -30,27 +31,6 @@ def main():
 
 #=====================================
 
-def emto_read_post_data(filename='emto_post_data'):
-
-    jobn=np.array([])
-    Etot=np.array([])
-    SWS =np.array([])
-
-    f = open(filename, 'r')
-    next(f)
-    for line in f:
-        # to skip unfinished job
-        if np.abs( float(line.split( )[1]) ) > 1e-6 :  
-            jobn = np.append( jobn, float(line.split()[0]) )
-            Etot = np.append( Etot, float(line.split()[1]) )
-            SWS  = np.append( SWS,  float(line.split()[2]) )
-    f.close()
-
-    print('==> CHECK jobn Etot(Ry) SWS(Bohr):')
-    print(jobn, Etot, SWS)
-    return jobn, Etot, SWS
-
-
 
 def post_data(jobn, Etot, SWS):
     n=2
@@ -59,9 +39,8 @@ def post_data(jobn, Etot, SWS):
         import sys
         sys.exit("\n==> ABORT: less than %d data points!\n" %(n))
  
-    import scipy.constants as sc
-    Bohr2Ang = sc.physical_constants['Bohr radius'][0]*1e10
-    Ry2J = sc.physical_constants['Rydberg constant times hc in J'][0] 
+    Bohr2Ang = ef.phy_const('Bohr2Ang')  
+    Ry2J = ef.phy_const('Ry2eV') / ef.phy_const('qe') 
 
     V = 4/3 *np.pi *(SWS*Bohr2Ang)**3 
     V0 = V.mean()
