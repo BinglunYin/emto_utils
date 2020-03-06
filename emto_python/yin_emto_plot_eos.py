@@ -9,45 +9,22 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-import math
+import yin_emto_func as ef
 
 
-Bohr2Ang = sc.physical_constants['Bohr radius'][0]*1e10
-Ry2eV = sc.physical_constants['Rydberg constant times hc in eV'][0] 
-qe = sc.physical_constants['elementary charge'][0]
+
+
+Bohr2Ang = ef.phy_const('Bohr2Ang')
+Ry2eV = ef.phy_const('Ry2eV')
+qe = ef.phy_const('qe')
+
+
 
 
 #=====================================
 
 
-def emto_read_post_data():
-
-    filename='emto_post_data'
-    
-
-    jobn=[]
-    Etot=[]
-    SWS=[]
-
-    f = open(filename, 'r')
-    next(f)
-    for line in f:
-        if np.abs( float(line.split( )[1]) ) > 1e-6 : 
-            jobn.append( float(line.split( )[0]) )
-            Etot.append( float(line.split( )[1]) )
-            SWS.append(  float(line.split( )[2]) )
-    
-    print('\nCHECK jobn Etot(Ry) SWS(Bohr):')
-    print(jobn)
-    print(Etot)
-    print(SWS)
-    
-    f.close()
-
-    return jobn, Etot, SWS
-
-
-jobn, Etot, SWS=emto_read_post_data()
+jobn, Etot, SWS = ef.emto_read_post_data()
 
 
 
@@ -65,7 +42,7 @@ energies = []
 
 for i in range(0, len(SWS), 1):
     energies.append( Etot[i]*Ry2eV )
-    vols.append( 4/3*math.pi*(SWS[i]*Bohr2Ang)**3 )
+    vols.append( 4/3*np.pi*(SWS[i]*Bohr2Ang)**3 )
 
 
 jobn=np.array(jobn)
@@ -124,7 +101,7 @@ B0=plsq[1]*qe*1e21
 BP=plsq[2]
 V0=plsq[3]
 
-SWS0=(V0/(4/3*math.pi))**(1/3) /Bohr2Ang 
+SWS0=(V0/(4/3*np.pi))**(1/3) /Bohr2Ang 
 
 a0=(V0*4)**(1/3) 
 
@@ -133,7 +110,7 @@ V1V0= np.mean( np.divide( vols/V0, jobn ))
 #=====================================
 
 
-f = open("emto_Birch_Murnaghan_EOS.txt","w+")
+f = open("emto_post_eos.txt","w+")
 
 f.write("# EOS fitting: \n" )
 
@@ -207,6 +184,6 @@ plt.xlabel('$V/V_0$')
 plt.ylabel('$E-E_0$ (meV)')
 plt.xticks(np.arange(0.8, 1.2, 0.05))
 plt.xlim([0.92, 1.08])
-plt.savefig('emto_Birch_Murnaghan_EOS.pdf')
+plt.savefig('emto_post_eos.pdf')
 
 
