@@ -91,7 +91,7 @@ def myfitting(x, y):
 #=====================================
 
 def read_B():
-    filename = '../emto_E_V/emto_Birch_Murnaghan_EOS.txt'
+    filename = '../emto_E_V/emto_post_eos.txt'
     f = open(filename, 'r')
     next(f);  next(f)
     line1 = f.readline()

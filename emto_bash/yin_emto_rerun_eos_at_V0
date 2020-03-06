@@ -2,7 +2,7 @@
 
 
 
-txtfile=emto_E_V/emto_Birch_Murnaghan_EOS.txt
+txtfile=emto_E_V/emto_post_eos.txt
 
 SWS0=`grep -A1 SWS0 $txtfile | tail -1 | awk '{printf "%.6f", $1}'`
 echo  $SWS0 

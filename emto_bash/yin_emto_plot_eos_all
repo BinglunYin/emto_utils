@@ -3,16 +3,16 @@
 # for EMTO
 
 
-myplot=~/yin_github/emto_utils/emto_python/yin_emto_plot_Birch_Murnaghan_EOS.py
+myplot=~/yin_github/emto_utils/emto_python/yin_emto_plot_eos.py
 
 
-module purge
-module load intel
-module load python/3.6.5
-module list
-
-echo python version
-python --version
+# module purge
+# module load intel
+# module load python/3.6.5
+# module list
+# 
+# echo python version
+# python --version
 
 
 #--------------------
@@ -44,8 +44,8 @@ echo -e "\n==>" $i1
 cd $i1
 
 cd emto_E_V
-yin_emto_univ_post  $1
-python $myplot
+yin_emto_univ_post 
+$myplot
 cd ..
 
 
@@ -62,7 +62,7 @@ done
 
 
 #===================
-head ./*/emto_E_V/emto_Birch_Murnaghan_EOS.txt > eos_data 
+head ./*/emto_E_V/emto_post_eos.txt > eos_data 
 cat eos_data
 
 
