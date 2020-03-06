@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/home/yin/opt/bin/python3
 
 
 import numpy as np
@@ -40,13 +40,14 @@ def post_data(jobn, Etot, SWS):
         sys.exit("\n==> ABORT: less than %d data points!\n" %(n))
  
     Bohr2Ang = ef.phy_const('Bohr2Ang')  
-    Ry2J = ef.phy_const('Ry2eV') / ef.phy_const('qe') 
+    Ry2J = ef.phy_const('Ry2eV') * ef.phy_const('qe') 
 
     V = 4/3 *np.pi *(SWS*Bohr2Ang)**3 
     V0 = V.mean()
   
     x = jobn.copy()            #[strain]
     y = Etot * Ry2J /V0 *1e21  #[GPa]
+    print(x, y)
     return x, y
 
 
@@ -105,7 +106,7 @@ def read_B():
 
 def write_output(Cij, fitres1, fitres2):
 
-    f = open("emto_Cij_cubic.txt","w+")
+    f = open("emto_post_Cij_cubic.txt","w+")
 
     f.write("# emto Cij cubic: \n" )
 
@@ -115,11 +116,11 @@ def write_output(Cij, fitres1, fitres2):
     f.write("%16.8f %16.8f %16.8f \n" \
     %(Cij[0], Cij[1], Cij[2]) )
 
-    f.write("\n%16s \n" \
-    %('B (GPa)') )
+    f.write("\n%16s %16s \n" \
+    %('(C11+2C12)/3', '(C11-C12)/2' ) )
 
-    f.write("%16.8f \n" \
-    %( (Cij[0] + 2*Cij[1])/3 ) )
+    f.write("%16.8f %16.8f \n" \
+    %( (Cij[0] + 2*Cij[1])/3 , (Cij[0]-Cij[1])/2      ) )
 
 
     f.write("\n# fitting results of y = a*x**2 +c [GPa]: \n" )
@@ -188,7 +189,7 @@ def plot_Cij(x1, y1, x2, y2, fitres1, fitres2):
     ax1[1].text(0.0005, round(yi2.max()*0.8), \
     'mono: a= %.1f GPa'%(fitres2[0])  )
 
-    plt.savefig('emto_Cij_cubic.pdf')
+    plt.savefig('emto_post_Cij_cubic.pdf')
 
 
 

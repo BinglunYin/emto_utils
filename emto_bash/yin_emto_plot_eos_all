@@ -43,11 +43,16 @@ do
 echo -e "\n==>" $i1
 cd $i1
 
-cd emto_E_V
-yin_emto_univ_post 
-$myplot
-cd ..
+if [ -d "emto_E_V" ]; then
+    cd emto_E_V
+   
+    yin_emto_univ_post 
 
+    #python $myplot
+    $myplot
+
+    cd ..
+fi
 
 echo -e "\n==================\n "$i1"\n==================\n " >> $p_diff
 
