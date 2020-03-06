@@ -163,7 +163,7 @@ def plot_Cij(x1, y1, x2, y2, fitres1, fitres2):
     fig_w = 3.15
     fig_h = 5
 
-    xi=np.arange(0, 0.0101, 1e-4)
+    xi=np.arange(0, 0.0501, 1e-4)
 
     fig1, ax1 = plt.subplots(nrows=2, ncols=1, \
     sharex=True, figsize=(fig_w, fig_h) )
